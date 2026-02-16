@@ -5,8 +5,11 @@ class Contact:
         name (str): The name of the contact.
         number (str): The phone number of the contact.
     '''
+
+    def __init__(self, name, number):
+        self.name = name
+        self.number = number
     
-    pass # Delete this line when implementing the class
 
 class Node:
     '''
@@ -17,7 +20,10 @@ class Node:
         next (Node): Pointer to the next node in case of a collision.
     '''
    
-    pass # Delete this line when implementing the class
+    def __init__(self, key, value):
+        self.key = key
+        self.value = value
+        self.next = None
 
 class HashTable:
     '''
@@ -32,6 +38,65 @@ class HashTable:
         print_table(): Prints the structure of the hash table.
     '''
     
-    pass # Delete this line when implementing the class
+    def __init__(self, size):
+        self.size = size
+        self.data = [None] * size
+  
+    def hash_function(self, key):
+        total = 0
+        for char in key:
+            total += ord(char)
+        return total % self.size
+    
+    def insert(self, key, value):
+        index = self.hash_function(key)
 
-# Test your hash table implementation here.  
+        current = self.data[index]
+
+        if self.data[index] is None:
+            self.data[index] = Node(key,value)
+            return
+        
+        while current:
+            if current.key == key:
+                current.value = value
+                return
+            
+            if current.next is None:
+                break
+
+            current = current.next
+
+        current.next = Node(key, value)
+
+    def search(self, key):
+        index = self.hash_function(key)
+        current = self.data[index]
+
+        while current:
+            if current.key == key:
+                return current.value
+            current = current.next
+        
+        return None
+    
+    def print_table(self):
+        for i in range(self.size):
+            print(f"Index {i}:", end=" ")
+            current = self.data[i]
+            while current:
+                print(f"[{current.value}]", end=" -> ")
+                current = current.next
+            print("None")
+
+# Test your hash table implementation here. 
+
+table = HashTable(10)
+
+table.insert("John", "909-876-1234")
+table.insert("Rebecca", "111-555-0002")
+
+contact = table.search("John") 
+print("\nSearch result:", contact)
+
+
